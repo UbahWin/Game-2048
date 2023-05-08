@@ -40,27 +40,36 @@ struct ContentView: View {
                     if abs(dx) > abs(dy) {
                         if dx > 0 {
                             game.shiftBlocks(to: .right)
-                            print("right")
                         } else {
                             game.shiftBlocks(to: .left)
-                            print("left")
                         }
                     } else {
                         if dy > 0 {
                             game.shiftBlocks(to: .down)
-                            print("down")
                         } else {
                             game.shiftBlocks(to: .up)
-                            print("up")
                         }
                     }
                 })
             .padding()
+            .alert(isPresented: $game.gameOver) {
+                Alert(
+                    title: Text("Вы проиграли"),
+                    dismissButton: .default(Text("Ещё раз")) { game.resetBoard() }
+                )
+            }
+            .alert(isPresented: $game.victory) {
+                Alert(
+                    title: Text("Вы выиграли"),
+                    dismissButton: .default(Text("Ещё раз")) { game.resetBoard() }
+                )
+            }
             
             Button(
                 action: { game.resetBoard() },
                 label: { Image(systemName: "arrow.clockwise") }
             )
+            .padding()
         }
     }
 }

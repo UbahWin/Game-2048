@@ -9,60 +9,48 @@ import Foundation
 
 class Game: ObservableObject {
     @Published var board = [[Block]]()
-    let emptyBlock = Block()
-    var sizeBoard = 4
+    let emptyBlock: Block = Block()
+    var sizeBoard: Int = 4
+    @Published var victory: Bool = false
+    @Published var gameOver: Bool = false
     
     init() {
         resetBoard()
     }
     
-    // Функция для генерации нового блока на игровом поле
+    // Функция для генерации нового блока
     func generateNewBlock() {
-        // Находим все свободные ячейки на игровом поле
-        var emptyCells = [(Int, Int)]()
+        // Находим все свободные блоки
+        var emptyBlocks = [(Int, Int)]()
         for i in 0..<4 {
             for j in 0..<4 {
                 if board[i][j].color == emptyBlock.color {
-                    emptyCells.append((i, j)) // координаты пустых ячеек
+                    emptyBlocks.append((i, j)) // Координаты пустых ячеек
                 }
             }
         }
-        // Если есть свободные ячейки, выбираем случайную и создаем новый блок
-        if !emptyCells.isEmpty {
-            let randomIndex = Int(arc4random_uniform(UInt32(emptyCells.count)))
-            let (i, j) = emptyCells[randomIndex]
+        // Если есть свободные блоки, выбираем случайный и создаем новый блок
+        if !emptyBlocks.isEmpty {
+            let randomIndex = Int(arc4random_uniform(UInt32(emptyBlocks.count)))
+            let (i, j) = emptyBlocks[randomIndex]
             board[i][j] = Block(value: Int.random(in: 1...2) * 2, color: .orange)
         } else {
-//            gameOver()
+            gameOver = true
         }
-        
     }
 
-    // Функция для проверки возможности объединения двух блоков
-    func canMerge(block1: Block, block2: Block) -> Bool {
-        return block1.value == block2.value && block1.value != 0
-    }
-
-    // Функция для объединения двух блоков
-    func mergeBlocks(block1: Block, block2: Block) -> Block {
-        let mergedBlock = Block(value: block1.value * 2, color: .orange)
-        block1.value = 0
-        block2.value = 0
-        return mergedBlock
-    }
-
-    // Функция для проверки достижения числа 2048 на игровом поле
-    func checkWin() -> Bool {
+    // Функция для проверки достижения числа 2048
+    func checkWin() {
         for i in 0..<sizeBoard {
             for j in 0..<sizeBoard {
                 if board[i][j].value == 2048 {
-                    return true
+                    victory = true
                 }
             }
         }
-        return false
     }
     
+    // Обновляем поле
     func resetBoard() {
         var newBoard = [[Block]]()
         for _ in 0...sizeBoard {
@@ -75,36 +63,36 @@ class Game: ObservableObject {
         }
         board = newBoard
         generateNewBlock()
+        victory = false
+        gameOver = false
     }
     
     // Функция для сдвига блоков на игровом поле
     func shiftBlocks(to toward: Toward) {
         switch toward {
             case .left:
-            
-            
                 for row in 0..<4 {
                     for col in 1..<4 {
-                        if board[row][col].color == emptyBlock.color {
+                        if board[row][col].color == emptyBlock.color { // Скипаем сразу все пустые блоки
                             continue
                         }
-
+                        
                         var newPosition = col
                         while newPosition > 0 && board[row][newPosition - 1].color == emptyBlock.color {
                             newPosition -= 1
                         }
 
-                        if newPosition != col {
+                        if newPosition != col { // Если мы таки переместились духовно, то перемещаемся материально
                             board[row][newPosition] = board[row][col]
                             board[row][col] = emptyBlock
-                        } else if newPosition > 0 && board[row][newPosition - 1].value == board[row][newPosition].value {
+                        }
+                        
+                        if newPosition > 0 && board[row][newPosition - 1].value == board[row][newPosition].value { // Мерджим значения блоков, если они равны
                             board[row][newPosition - 1].value *= 2
                             board[row][newPosition] = emptyBlock
                         }
                     }
                 }
-            
-            
             case .right:
                 for row in 0..<4 {
                     for col in (0..<3).reversed() {
@@ -117,57 +105,66 @@ class Game: ObservableObject {
                             newPosition += 1
                         }
 
-                        if newPosition != col {
+                        if newPosition != col { // Если мы таки переместились духовно, то перемещаемся материально
                             board[row][newPosition] = board[row][col]
                             board[row][col] = emptyBlock
-                        } else if newPosition < 3 && board[row][newPosition + 1].value == board[row][newPosition].value {
+                        }
+                        
+                        if newPosition < 3 && board[row][newPosition + 1].value == board[row][newPosition].value { // Мерджим значения блоков, если они равны
                             board[row][newPosition + 1].value *= 2
                             board[row][newPosition] = emptyBlock
                         }
                     }
                 }
             case .up:
-                for row in 1..<4 {
-                    for col in 0..<4 {
-                        if board[row][col].color == emptyBlock.color {
+                for col in 0..<4 {
+                    for row in 1..<4 { // Итерируемся сверху вниз
+                        if board[row][col].color == emptyBlock.color { // Скипаем сразу все пустые блоки
                             continue
                         }
-
+                        
                         var newPosition = row
                         while newPosition > 0 && board[newPosition - 1][col].color == emptyBlock.color {
                             newPosition -= 1
                         }
-
-                        if newPosition != row {
+                        
+                        if newPosition != row { // Если мы таки переместились духовно, то перемещаемся материально
                             board[newPosition][col] = board[row][col]
                             board[row][col] = emptyBlock
-                        } else if newPosition > 0 && board[newPosition - 1][col].value == board[newPosition][col].value {
+                        }
+                        
+                        if newPosition > 0 && board[newPosition - 1][col].value == board[newPosition][col].value { // Мерджим значения блоков, если они равны
                             board[newPosition - 1][col].value *= 2
                             board[newPosition][col] = emptyBlock
                         }
                     }
                 }
             case .down:
-                for row in (0..<4-1).reversed() {
-                    for col in 0..<4 {
-                        if board[row][col].color == emptyBlock.color {
+                for col in 0..<4 {
+                    for row in (0..<3).reversed() { // Итерируемся снизу вверх
+                        if board[row][col].color == emptyBlock.color { // Скипаем сразу все пустые блоки
                             continue
                         }
+                        
                         var newPosition = row
                         while newPosition < 3 && board[newPosition + 1][col].color == emptyBlock.color {
                             newPosition += 1
                         }
-                        if newPosition != row {
+                        
+                        if newPosition != row { // Если мы таки переместились духовно, то перемещаемся материально
                             board[newPosition][col] = board[row][col]
                             board[row][col] = emptyBlock
-                        } else if newPosition < 3 && board[newPosition + 1][col].value == board[newPosition][col].value {
+                        }
+                        
+                        if newPosition < 3 && board[newPosition + 1][col].value == board[newPosition][col].value { // Мерджим значения блоков, если они равны
                             board[newPosition + 1][col].value *= 2
                             board[newPosition][col] = emptyBlock
                         }
                     }
                 }
         }
-        generateNewBlock()
+        generateNewBlock() // После каждого свайпа создаем блок
+        checkWin()
     }
 }
 
