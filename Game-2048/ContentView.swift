@@ -12,7 +12,7 @@ struct ContentView: View {
     
     var body: some View {
         
-        VStack {
+        VStack() {
             Text("2048")
                 .font(.system(size: 80))
             
@@ -23,8 +23,8 @@ struct ContentView: View {
                             ZStack {
                                 Rectangle()
                                     .fill(game.board[row][col].color)
-                                    .frame(width: 80, height: 80)
-                                    .clipShape(SuperEllipseShape(rate: 1))
+                                    .frame(width: 70, height: 70)
+                                    .clipShape(SuperEllipseShape(rate: 0.99))
                                 if game.board[row][col].value != 0 {
                                     Text("\(game.board[row][col].value)")
                                         .font(.system(size: 40))
@@ -55,13 +55,7 @@ struct ContentView: View {
             .padding()
             .alert(isPresented: $game.gameOver) {
                 Alert(
-                    title: Text("Вы проиграли"),
-                    dismissButton: .default(Text("Ещё раз")) { game.resetBoard() }
-                )
-            }
-            .alert(isPresented: $game.victory) {
-                Alert(
-                    title: Text("Вы выиграли"),
+                    title: Text(game.message),
                     dismissButton: .default(Text("Ещё раз")) { game.resetBoard() }
                 )
             }

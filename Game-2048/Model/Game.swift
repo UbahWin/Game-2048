@@ -11,8 +11,8 @@ class Game: ObservableObject {
     @Published var board = [[Block]]()
     let emptyBlock: Block = Block()
     var sizeBoard: Int = 4
-    @Published var victory: Bool = false
     @Published var gameOver: Bool = false
+    @Published var message: String = ""
     
     init() {
         resetBoard()
@@ -36,6 +36,7 @@ class Game: ObservableObject {
             board[i][j] = Block(value: Int.random(in: 1...2) * 2, color: .orange)
         } else {
             gameOver = true
+            message = "Вы проиграли"
         }
     }
 
@@ -44,7 +45,8 @@ class Game: ObservableObject {
         for i in 0..<sizeBoard {
             for j in 0..<sizeBoard {
                 if board[i][j].value == 2048 {
-                    victory = true
+                    gameOver = true
+                    message = "Вы выиграли!!!"
                 }
             }
         }
@@ -63,8 +65,8 @@ class Game: ObservableObject {
         }
         board = newBoard
         generateNewBlock()
-        victory = false
         gameOver = false
+        message = ""
     }
     
     // Функция для сдвига блоков на игровом поле
