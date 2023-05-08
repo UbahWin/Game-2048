@@ -13,6 +13,7 @@
 		B7B879DA2A08351200EF412B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B7B879D92A08351200EF412B /* Preview Assets.xcassets */; };
 		B7B879E32A08352D00EF412B /* Block.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7B879E22A08352D00EF412B /* Block.swift */; };
 		B7B879E72A08362000EF412B /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7B879E62A08362000EF412B /* Game.swift */; };
+		B7C6316E2A094EC100D23A48 /* SuperEllipse.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7C6316D2A094EC100D23A48 /* SuperEllipse.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,6 +24,7 @@
 		B7B879D92A08351200EF412B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		B7B879E22A08352D00EF412B /* Block.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Block.swift; sourceTree = "<group>"; };
 		B7B879E62A08362000EF412B /* Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
+		B7C6316D2A094EC100D23A48 /* SuperEllipse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuperEllipse.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,6 +57,7 @@
 		B7B879D12A08351000EF412B /* Game-2048 */ = {
 			isa = PBXGroup;
 			children = (
+				B7C6316C2A094EB400D23A48 /* View */,
 				B7B879E02A08351900EF412B /* Model */,
 				B7B879D22A08351000EF412B /* Game_2048App.swift */,
 				B7B879D42A08351000EF412B /* ContentView.swift */,
@@ -79,6 +82,14 @@
 				B7B879E62A08362000EF412B /* Game.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		B7C6316C2A094EB400D23A48 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				B7C6316D2A094EC100D23A48 /* SuperEllipse.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -152,6 +163,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B7B879E72A08362000EF412B /* Game.swift in Sources */,
+				B7C6316E2A094EC100D23A48 /* SuperEllipse.swift in Sources */,
 				B7B879E32A08352D00EF412B /* Block.swift in Sources */,
 				B7B879D52A08351000EF412B /* ContentView.swift in Sources */,
 				B7B879D32A08351000EF412B /* Game_2048App.swift in Sources */,

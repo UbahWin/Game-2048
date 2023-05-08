@@ -24,6 +24,7 @@ struct ContentView: View {
                                 Rectangle()
                                     .fill(game.board[row][col].color)
                                     .frame(width: 80, height: 80)
+                                    .clipShape(SuperEllipseShape(rate: 1))
                                 if game.board[row][col].value != 0 {
                                     Text("\(game.board[row][col].value)")
                                         .font(.system(size: 40))
