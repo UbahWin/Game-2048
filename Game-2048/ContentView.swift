@@ -8,14 +8,52 @@
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject var game = Game()
+    
     var body: some View {
+        
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
+            Text("2048")
+                .font(.system(size: 80))
+            
+            VStack(spacing: 5) {
+                ForEach(0..<4, id: \.self) { row in
+                    HStack(spacing: 5) {
+                        ForEach(0..<4, id: \.self) { col in
+                            BlockView(block: game.board[row][col])
+                        }
+                    }
+                }
+            }
+            .gesture(DragGesture(minimumDistance: 0, coordinateSpace: .local)
+                .onEnded { value in
+                    let dx = value.translation.width
+                    let dy = value.translation.height
+                    if abs(dx) > abs(dy) {
+                        if dx > 0 {
+                            game.shiftBlocks(to: .right)
+                            print("right")
+                        } else {
+                            game.shiftBlocks(to: .left)
+                            print("left")
+                        }
+                    } else {
+                        if dy > 0 {
+                            game.shiftBlocks(to: .down)
+                            print("down")
+                        } else {
+                            game.shiftBlocks(to: .up)
+                            print("up")
+                        }
+                    }
+                })
+            .padding()
+            
+            Button(
+                action: { game.resetBoard() },
+                label: { Image(systemName: "arrow.clockwise") }
+            )
         }
-        .padding()
     }
 }
 
