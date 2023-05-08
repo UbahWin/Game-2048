@@ -25,9 +25,11 @@ struct ContentView: View {
                                     .fill(game.board[row][col].color)
                                     .frame(width: 70, height: 70)
                                     .clipShape(SuperEllipseShape(rate: 0.99))
+                                    .animation(.linear(duration: 0.1))
                                 if game.board[row][col].value != 0 {
                                     Text("\(game.board[row][col].value)")
                                         .font(.system(size: 40))
+                                        
                                 }
                             }
                         }
@@ -56,7 +58,8 @@ struct ContentView: View {
             .alert(isPresented: $game.gameOver) {
                 Alert(
                     title: Text(game.message),
-                    dismissButton: .default(Text("Ещё раз")) { game.resetBoard() }
+                    primaryButton: .default(Text("Ещё раз"), action: { game.resetBoard() }),
+                    secondaryButton: .default(Text("Продолжить"))
                 )
             }
             

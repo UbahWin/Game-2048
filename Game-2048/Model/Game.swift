@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 class Game: ObservableObject {
     @Published var board = [[Block]]()
@@ -71,6 +72,8 @@ class Game: ObservableObject {
     
     // Функция для сдвига блоков на игровом поле
     func shiftBlocks(to toward: Toward) {
+        var isMoved = false
+        
         switch toward {
             case .left:
                 for row in 0..<4 {
@@ -80,18 +83,21 @@ class Game: ObservableObject {
                         }
                         
                         var newPosition = col
+                        
                         while newPosition > 0 && board[row][newPosition - 1].color == emptyBlock.color {
                             newPosition -= 1
                         }
-
-                        if newPosition != col { // Если мы таки переместились духовно, то перемещаемся материально
+                        // Если мы таки переместились духовно, то перемещаемся материально
+                        if newPosition != col {
                             board[row][newPosition] = board[row][col]
                             board[row][col] = emptyBlock
+                            isMoved = true
                         }
-                        
-                        if newPosition > 0 && board[row][newPosition - 1].value == board[row][newPosition].value { // Мерджим значения блоков, если они равны
+                        // Мерджим значения блоков, если они равны
+                        if newPosition > 0 && board[row][newPosition - 1].value == board[row][newPosition].value {
                             board[row][newPosition - 1].value *= 2
                             board[row][newPosition] = emptyBlock
+                            isMoved = true
                         }
                     }
                 }
@@ -106,15 +112,17 @@ class Game: ObservableObject {
                         while newPosition < 3 && board[row][newPosition + 1].color == emptyBlock.color {
                             newPosition += 1
                         }
-
+                    
                         if newPosition != col { // Если мы таки переместились духовно, то перемещаемся материально
                             board[row][newPosition] = board[row][col]
                             board[row][col] = emptyBlock
+                            isMoved = true
                         }
                         
                         if newPosition < 3 && board[row][newPosition + 1].value == board[row][newPosition].value { // Мерджим значения блоков, если они равны
                             board[row][newPosition + 1].value *= 2
                             board[row][newPosition] = emptyBlock
+                            isMoved = true
                         }
                     }
                 }
@@ -126,18 +134,21 @@ class Game: ObservableObject {
                         }
                         
                         var newPosition = row
+                        
                         while newPosition > 0 && board[newPosition - 1][col].color == emptyBlock.color {
                             newPosition -= 1
                         }
-                        
+                    
                         if newPosition != row { // Если мы таки переместились духовно, то перемещаемся материально
                             board[newPosition][col] = board[row][col]
                             board[row][col] = emptyBlock
+                            isMoved = true
                         }
                         
                         if newPosition > 0 && board[newPosition - 1][col].value == board[newPosition][col].value { // Мерджим значения блоков, если они равны
                             board[newPosition - 1][col].value *= 2
                             board[newPosition][col] = emptyBlock
+                            isMoved = true
                         }
                     }
                 }
@@ -148,7 +159,7 @@ class Game: ObservableObject {
                             continue
                         }
                         
-                        var newPosition = row
+                    var newPosition = row
                         while newPosition < 3 && board[newPosition + 1][col].color == emptyBlock.color {
                             newPosition += 1
                         }
@@ -156,16 +167,21 @@ class Game: ObservableObject {
                         if newPosition != row { // Если мы таки переместились духовно, то перемещаемся материально
                             board[newPosition][col] = board[row][col]
                             board[row][col] = emptyBlock
+                            isMoved = true
                         }
                         
                         if newPosition < 3 && board[newPosition + 1][col].value == board[newPosition][col].value { // Мерджим значения блоков, если они равны
                             board[newPosition + 1][col].value *= 2
                             board[newPosition][col] = emptyBlock
+                            isMoved = true
                         }
                     }
                 }
         }
-        generateNewBlock() // После каждого свайпа создаем блок
+        
+        if isMoved {
+            generateNewBlock() // После каждого свайпа создаем блок
+        }
         checkWin()
     }
 }

@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-class Block {
+class Block {    
     var value: Int
     var color: Color
     
