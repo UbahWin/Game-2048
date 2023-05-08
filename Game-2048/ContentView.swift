@@ -20,7 +20,15 @@ struct ContentView: View {
                 ForEach(0..<4, id: \.self) { row in
                     HStack(spacing: 5) {
                         ForEach(0..<4, id: \.self) { col in
-                            BlockView(block: game.board[row][col])
+                            ZStack {
+                                Rectangle()
+                                    .fill(game.board[row][col].color)
+                                    .frame(width: 80, height: 80)
+                                if game.board[row][col].value != 0 {
+                                    Text("\(game.board[row][col].value)")
+                                        .font(.system(size: 40))
+                                }
+                            }
                         }
                     }
                 }
