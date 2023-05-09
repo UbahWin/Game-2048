@@ -34,7 +34,7 @@ class Game: ObservableObject {
         if !emptyBlocks.isEmpty {
             let randomIndex = Int(arc4random_uniform(UInt32(emptyBlocks.count)))
             let (i, j) = emptyBlocks[randomIndex]
-            board[i][j] = Block(value: Int.random(in: 1...2) * 2, color: .orange)
+            board[i][j] = Block(value: Int.random(in: 1...2) * 2, color: Color(hex: 0xffc266))
         } else {
             gameOver = true
             message = "Вы проиграли"
@@ -70,11 +70,25 @@ class Game: ObservableObject {
         message = ""
     }
     
+    func changeColor(in block: Block) {
+        switch block.value {
+        case 8, 16: block.color = Color(hex: 0xffad33)
+            case 32, 64: block.color = Color(hex: 0xffa420)
+            case 128: block.color = Color(hex: 0xffa000)
+            case 256: block.color = Color(hex: 0xf3a505)
+            case 512: block.color = Color(hex: 0xffb300)
+            case 1024: block.color = Color(hex: 0xffa343)
+            case 2048: block.color = Color(hex: 0xcc5500)
+        default:
+            block.color = Color(hex: 0xffc266)
+        }
+    }
+    
     // Функция для сдвига блоков на игровом поле
     func shiftBlocks(to toward: Toward) {
         var isMoved = false
         
-        switch toward {
+        switch toward { // TODO: ГОВНОКОДИЩЕ, переделать свитч
             case .left:
                 for row in 0..<4 {
                     for col in 1..<4 {
@@ -96,6 +110,7 @@ class Game: ObservableObject {
                         // Мерджим значения блоков, если они равны
                         if newPosition > 0 && board[row][newPosition - 1].value == board[row][newPosition].value {
                             board[row][newPosition - 1].value *= 2
+                            changeColor(in: board[row][newPosition - 1])
                             board[row][newPosition] = emptyBlock
                             isMoved = true
                         }
@@ -121,6 +136,7 @@ class Game: ObservableObject {
                         
                         if newPosition < 3 && board[row][newPosition + 1].value == board[row][newPosition].value { // Мерджим значения блоков, если они равны
                             board[row][newPosition + 1].value *= 2
+                            changeColor(in: board[row][newPosition + 1])
                             board[row][newPosition] = emptyBlock
                             isMoved = true
                         }
@@ -147,6 +163,7 @@ class Game: ObservableObject {
                         
                         if newPosition > 0 && board[newPosition - 1][col].value == board[newPosition][col].value { // Мерджим значения блоков, если они равны
                             board[newPosition - 1][col].value *= 2
+                            changeColor(in: board[newPosition - 1][col])
                             board[newPosition][col] = emptyBlock
                             isMoved = true
                         }
@@ -172,15 +189,16 @@ class Game: ObservableObject {
                         
                         if newPosition < 3 && board[newPosition + 1][col].value == board[newPosition][col].value { // Мерджим значения блоков, если они равны
                             board[newPosition + 1][col].value *= 2
+                            changeColor(in: board[newPosition + 1][col])
                             board[newPosition][col] = emptyBlock
                             isMoved = true
                         }
                     }
                 }
         }
-        
+        // После каждого свайпа создаем блок
         if isMoved {
-            generateNewBlock() // После каждого свайпа создаем блок
+            generateNewBlock()
         }
         checkWin()
     }
@@ -188,4 +206,16 @@ class Game: ObservableObject {
 
 enum Toward {
     case left, right, up, down
+}
+
+extension Color {
+    init(hex: UInt, alpha: Double = 1) {
+        self.init(
+            .sRGB,
+            red: Double((hex >> 16) & 0xff) / 255,
+            green: Double((hex >> 08) & 0xff) / 255,
+            blue: Double((hex >> 00) & 0xff) / 255,
+            opacity: alpha
+        )
+    }
 }

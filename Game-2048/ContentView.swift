@@ -27,9 +27,16 @@ struct ContentView: View {
                                     .clipShape(SuperEllipseShape(rate: 0.99))
                                     .animation(.linear(duration: 0.1))
                                 if game.board[row][col].value != 0 {
-                                    Text("\(game.board[row][col].value)")
-                                        .font(.system(size: 40))
-                                        
+                                    if game.board[row][col].value < 1024 && game.board[row][col].value > 64 {
+                                        Text("\(game.board[row][col].value)")
+                                            .font(.system(size: 30))
+                                    } else if game.board[row][col].value > 512 {
+                                        Text("\(game.board[row][col].value)")
+                                            .font(.system(size: 25))
+                                    } else {
+                                        Text("\(game.board[row][col].value)")
+                                            .font(.system(size: 35))
+                                    }
                                 }
                             }
                         }
