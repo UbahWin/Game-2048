@@ -49,15 +49,15 @@ struct ContentView: View {
                     let dy = value.translation.height
                     if abs(dx) > abs(dy) {
                         if dx > 0 {
-                            game.shiftBlocks(to: .right)
+                            game.move(to: .right)
                         } else {
-                            game.shiftBlocks(to: .left)
+                            game.move(to: .left)
                         }
                     } else {
                         if dy > 0 {
-                            game.shiftBlocks(to: .down)
+                            game.move(to: .down)
                         } else {
-                            game.shiftBlocks(to: .up)
+                            game.move(to: .up)
                         }
                     }
                 })

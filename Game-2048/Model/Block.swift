@@ -8,7 +8,11 @@
 import Foundation
 import SwiftUI
 
-class Block {    
+class Block: Equatable {
+    static func == (lhs: Block, rhs: Block) -> Bool {
+        return lhs.color == rhs.color
+    }
+    
     var value: Int
     var color: Color
     
