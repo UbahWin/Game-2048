@@ -103,16 +103,14 @@ class Game: ObservableObject {
     }
     
     func slide(_ row: [Block]) -> [Block] {
-        withAnimation() {
-            let blocksWithNumbers = row.filter { $0.value > 0 }
-            let emptyBlocksCount = row.count - blocksWithNumbers.count
-            let arrayOfZeros = Array(repeating: Block(), count: emptyBlocksCount)
-            let finalRow = arrayOfZeros + blocksWithNumbers
-            if finalRow != row {
-                isMoved = true
-            }
-            return finalRow
+        let blocksWithNumbers = row.filter { $0.value > 0 }
+        let emptyBlocksCount = row.count - blocksWithNumbers.count
+        let arrayOfZeros = Array(repeating: Block(), count: emptyBlocksCount)
+        let finalRow = arrayOfZeros + blocksWithNumbers
+        if finalRow != row {
+            isMoved = true
         }
+        return finalRow
     }
     
     func combine(_ row: [Block]) -> [Block] {
