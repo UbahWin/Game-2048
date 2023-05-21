@@ -28,6 +28,7 @@ struct ContentView: View {
                                 if game.board[row][col].value != 0 {
                                     Text("\(game.board[row][col].value)")
                                         .font(.system(size: CGFloat(game.board[row][col].sizeValueText)))
+                                        .foregroundColor(.black)
                                 }
                             }
                         }
@@ -56,8 +57,7 @@ struct ContentView: View {
             .alert(isPresented: $game.gameOver) {
                 Alert(
                     title: Text(game.message),
-                    primaryButton: .default(Text("Ещё раз"), action: { game.resetBoard() }),
-                    secondaryButton: .default(Text("Продолжить"))
+                    dismissButton: .default(Text("Ещё раз"), action: { game.resetBoard() })
                 )
             }
             

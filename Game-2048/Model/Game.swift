@@ -14,7 +14,6 @@ class Game: ObservableObject {
     var sizeBoard: Int = 4
     @Published var gameOver: Bool = false
     @Published var message: String = ""
-    var isMoved = false
     
     init() {
         resetBoard()
@@ -35,11 +34,8 @@ class Game: ObservableObject {
         if !emptyBlocks.isEmpty {
             let randomIndex = Int(arc4random_uniform(UInt32(emptyBlocks.count)))
             let (i, j) = emptyBlocks[randomIndex]
-            let randValue = Int.random(in: 1...2) * 2
-            board[i][j] = Block(value: randValue)
-        } else {
-            gameOver = true
-            message = "Вы проиграли"
+            let twoOrFour = Int.random(in: 1...4) == 1 ? 4 : 2
+            board[i][j] = Block(value: twoOrFour)
         }
     }
 
@@ -107,9 +103,6 @@ class Game: ObservableObject {
         let emptyBlocksCount = row.count - blocksWithNumbers.count
         let arrayOfZeros = Array(repeating: Block(), count: emptyBlocksCount)
         let finalRow = arrayOfZeros + blocksWithNumbers
-        if finalRow != row {
-            isMoved = true
-        }
         return finalRow
     }
     
@@ -124,15 +117,14 @@ class Game: ObservableObject {
             if left == right {
                 newRow[column].value = left + right
                 newRow[prevColumn].value = 0
-                isMoved = true
             }
         }
         return newRow
     }
     
     func move(to toward: Toward) {
-        isMoved = false
-                
+        let actualBoard = board
+        
         switch toward {
             case .left:
                 flip()
@@ -152,9 +144,8 @@ class Game: ObservableObject {
                 rotate()
         }
         
-        if isMoved {
-            generateNewBlock()
-        }
+        if actualBoard != board { generateNewBlock() }
+        
         checkWin()
     }
 }
